@@ -352,7 +352,7 @@ endfunction
 
 function! s:ModifyPairsList(list, pairsToAdd, openersToRemove)
     return filter(
-                \ extend(a:list, AutoClose#ParsePairs(a:pairsToAdd), "force"),
+                \ extend(AutoClose#ParsePairs(a:pairsToAdd), a:list, "keep"),
                 \ "stridx(a:openersToRemove,v:key)<0")
 endfunction
 
