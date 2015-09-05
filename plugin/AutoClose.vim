@@ -11,7 +11,7 @@ scriptencoding utf-8
 
 " check if script is already loaded
 if !exists("g:debug_AutoClose") && exists("g:loaded_AutoClose")
-    finish "stop loading the script"
+    finish "stop loading the script
 endif
 let g:loaded_AutoClose = 1
 
@@ -108,7 +108,8 @@ function! s:AllowQuote(char, isBS)
         if l:backSlashCount % 2
             let l:result = 0
         else
-            if a:char == "'" && l:prev =~ '[a-zA-Z0-9]'
+	    " For words like "Can't"
+            if a:char == "'" && l:prev =~? '\w'
                 let l:result = 0
             endif
         endif
@@ -392,7 +393,7 @@ function! s:DefineVariables()
         let defaults['AutoClosePumvisible'][key] = '<'.key.'>'
     endfor
 
-    if exists ('b:AutoClosePairs') && type('b:AutoClosePairs') == type("")
+    if exists('b:AutoClosePairs') && type('b:AutoClosePairs') == type("")
         let tmp = AutoClose#ParsePairs(b:AutoClosePairs)
         unlet b:AutoClosePairs
         let b:AutoClosePairs = tmp
@@ -481,7 +482,6 @@ function! s:CreateExtraMaps()
 endfunction
 
 function! s:CreateMaps()
-    silent doautocmd FileType
     call s:DefineVariables()
     call s:CreatePairsMaps()
     call s:CreateExtraMaps()
@@ -528,15 +528,15 @@ if has("gui_macvim")
     call extend(s:movementKeys, split("D-LEFT D-RIGHT D-UP D-DOWN M-LEFT M-RIGHT M-UP M-DOWN"))
 endif
 
-augroup <Plug>(autoclose)
-autocmd!
-autocmd BufNewFile,BufRead,BufEnter * if !<SID>IsLoadedOnBuffer() | call <SID>CreateMaps() | endif
-autocmd InsertEnter * call <SID>EmptyBuffer()
-autocmd BufEnter * if mode() == 'i' | call <SID>EmptyBuffer() | endif
+augroup autoclose_townk
+    autocmd!
+    autocmd BufNewFile,BufRead,BufEnter * if !<SID>IsLoadedOnBuffer() | call <SID>CreateMaps() | endif
+    autocmd InsertEnter * call <SID>EmptyBuffer()
+    autocmd BufEnter * if mode() == 'i' | call <SID>EmptyBuffer() | endif
 augroup END
 
 " Define convenient commands
-command! AutoCloseOn :let b:AutoCloseOn = 1
-command! AutoCloseOff :let b:AutoCloseOn = 0
-command! AutoCloseToggle :call s:ToggleAutoClose()
+command! AutoCloseOn     let b:AutoCloseOn = 1
+command! AutoCloseOff    let b:AutoCloseOn = 0
+command! AutoCloseToggle call s:ToggleAutoClose()
 " vim:sw=4:sts=4:
