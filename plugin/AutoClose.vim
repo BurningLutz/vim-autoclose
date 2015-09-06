@@ -133,7 +133,11 @@ function! s:CountQuotes(char)
                 let l:regex = q . '[ˆ' . q . ']*' . q
             endif
 
-            let l:closedQuoteIdx = match(l:line, l:regex)
+            try
+                let l:closedQuoteIdx = match(l:line, l:regex)
+            catch /^Vim\%((\a\+)\)\=:E871/
+                echom 'vim-autoclose Error: '.l:line.' =regex= '.l:regex
+            endtry
             while l:closedQuoteIdx >= 0
                 let l:matchedStr = matchstr(l:line, l:regex, l:closedQuoteIdx)
                 let l:line = strpart(l:line, 0, l:closedQuoteIdx) . strpart(l:line, l:closedQuoteIdx + strlen(l:matchedStr))
