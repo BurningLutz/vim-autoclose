@@ -378,6 +378,7 @@ function! s:DefineVariables()
                 \ 'AutoClosePumvisible': {"ENTER": "\<C-Y>", "ESC": "\<C-E>"},
                 \ 'AutoCloseExpandEnterOn': "",
                 \ 'AutoCloseExpandSpace': 1,
+                \ 'AutoClosePreserveEnterMapping': 0,
                 \ }
 
     " Let the user define if he/she wants the plugin to do special actions when the
@@ -462,7 +463,16 @@ function! s:CreateExtraMaps()
         inoremap <buffer> <silent> <Space>      <C-R>=<SID>Space()<CR>
     endif
     if len(b:AutoCloseExpandEnterOn) > 0
-        inoremap <buffer> <silent> <CR>      <C-R>=<SID>Enter()<CR>
+        if b:AutoClosePreserveEnterMapping
+            " Try to keep what was there before/globally defined
+            let l:cmap = maparg('<CR>', 'i')
+            let l:cmap_append = substitute(l:cmap, '\V\^<CR>', '', '')
+            inoremap <buffer> <silent> <Plug>(AutoCloseEnter) <C-R>=<SID>Enter()<CR>
+            execute 'imap <buffer> <silent> <CR> <Plug>(AutoCloseEnter)'.l:cmap_append
+        else
+            " Just keep it local, and clobber whatever was there
+            inoremap <buffer> <silent> <CR>      <C-R>=<SID>Enter()<CR>
+        endif
     endif
 
     if g:AutoClosePreserveDotReg
