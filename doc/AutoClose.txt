@@ -34,6 +34,7 @@ will not insert the closing character for you.
        3.2 Defining protected regions          |ac_protectedregions|
        3.3 Turning AutoClose on and off        |ac_turnon|
        3.4 Selection wrap prefix               |ac_wrapPrefix|
+       3.5 Compatibility with other plugins    |ac_compatibility|
     4. Under the hood                          |ac_details|
        4.1 Mappings                            |ac_mappings|
 
@@ -273,6 +274,16 @@ visual mode. Examples:
 
     " hide the sacrilege from the gods of vim:
     autocmd FileType vim let b:AutoCloseSelectionWrapPrefix="<Leader>a"
+<
+
+3.6. Compatibility with other plugins
+
+    If you have other plugins that map <CR> (the Enter key), such as tpope's
+    endwise, set the option g:*AutoClosePreserveEnterMapping* to ensure that
+    both plugins can coexist in peace.
+
+>
+    let g:AutoClosePreserveEnterMapping = 1
 <
 ==============================================================================
                                                                   *ac_details*
