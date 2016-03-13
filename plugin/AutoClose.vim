@@ -15,7 +15,7 @@ if !exists("g:debug_AutoClose") && exists("g:loaded_AutoClose")
 endif
 let g:loaded_AutoClose = 1
 
-let s:global_cpo = &cpo " store compatible-mode in local variable
+let s:cpo_save = &cpo   " store compatible-mode in local variable
 set cpo&vim             " go into nocompatible-mode
 
 if !exists('g:AutoClosePreserveDotReg')
@@ -553,4 +553,8 @@ augroup END
 command! AutoCloseOn     let b:AutoCloseOn = 1
 command! AutoCloseOff    let b:AutoCloseOn = 0
 command! AutoCloseToggle call s:ToggleAutoClose()
+
+" Restore 'cpoptions'
+let &cpo = s:cpo_save
+unlet s:cpo_save
 " vim:sw=4:sts=4:
