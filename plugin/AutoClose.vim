@@ -460,7 +460,7 @@ function! s:CreateExtraMaps()
     inoremap <buffer> <silent> <BS>         <C-R>=<SID>Backspace()<CR>
     inoremap <buffer> <silent> <Del>        <C-R>=<SID>Delete()<CR>
     if b:AutoCloseExpandSpace
-        inoremap <buffer> <silent> <Space>      <C-R>=<SID>Space()<CR>
+        inoremap <buffer> <silent> <Space>      <C-]><C-R>=<SID>Space()<CR>
     endif
     if len(b:AutoCloseExpandEnterOn) > 0
         if b:AutoClosePreserveEnterMapping
