@@ -119,7 +119,7 @@ endfunction
 
 function! s:CountQuotes(char)
     let l:currPos = col('.')-1
-    let l:line = strpart(getline('.'), 0, l:currPos)
+    let l:line = split(strpart(getline('.'), 0, l:currPos), '\s', 1)[-1]
     let l:result = 0
 
     if l:currPos >= 0
@@ -250,10 +250,10 @@ function! s:ClosePair(closer)
     return a:closer
 endfunction
 
-" in case closer is identical with its opener - heuristically decide which one
-" is being typed and act accordingly
+" in case closer is identical with its opener
+" close only the first opener in the word
 function! s:OpenOrCloseTwinPair(char)
-    if s:CountQuotes(a:char) % 2 == 0
+    if s:CountQuotes(a:char) == 0
         " act as opening char
         return s:InsertPair(a:char)
     else
@@ -371,7 +371,7 @@ function! s:DefineVariables()
     " The buffer namespace is used internally
     let defaults = {
                 \ 'AutoClosePairs': AutoClose#DefaultPairs(),
-                \ 'AutoCloseProtectedRegions': ["Comment", "String", "Character"],
+                \ 'AutoCloseProtectedRegions': ["Comment"],
                 \ 'AutoCloseSmartQuote': 1,
                 \ 'AutoCloseOn': 1,
                 \ 'AutoCloseSelectionWrapPrefix': '<LEADER>a',
