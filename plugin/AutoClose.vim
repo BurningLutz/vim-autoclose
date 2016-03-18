@@ -294,13 +294,35 @@ function! s:Backspace()
     let l:next = s:GetNextChar()
     set ve=all
 
-    if b:AutoCloseOn && s:IsEmptyPair() && (l:prev != l:next || s:AllowQuote(l:prev, 1))
-        call s:EraseNCharsAtCursor(1)
-        call s:PopBuffer()
+    let l:result = "\<BS>"
+
+    if b:AutoCloseOn
+        " we're surrounded by spaces, so check one more level out for matching chars
+        if b:AutoCloseExpandSpace && l:prev == " " && l:next == " "
+            let l:prev = s:GetCharBehind(2)
+            let l:next = s:GetCharAhead(2)
+            let l:isEmpty = (l:next != "\0") && (get(b:AutoClosePairs, l:prev, "\0") == l:next)
+
+            call s:EraseNCharsAtCursor(1) "Delete the next space too
+            call s:PopBuffer()
+
+            if b:AutoCloseBackspaceDeleteMatchFirst
+                " Keep the first space
+                let l:result = ""
+            endif
+        elseif s:IsEmptyPair() && (l:prev != l:next || s:AllowQuote(l:prev, 1))
+            call s:EraseNCharsAtCursor(1)
+            call s:PopBuffer()
+
+            if b:AutoCloseBackspaceDeleteMatchFirst
+                " Keep the opening pair
+                let l:result = ""
+            endif
+        endif
     endif
 
     exec "set ve=" . l:save_ve
-    return "\<BS>"
+    return l:result
 endfunction
 
 function! s:Space()
@@ -390,6 +412,7 @@ function! s:DefineVariables()
                 \ 'AutoCloseExpandSpace': 1,
                 \ 'AutoClosePreserveEnterMapping': 0,
                 \ 'AutoCloseSkipSpacesOnCloseFor': AutoClose#DefaultPairs(),
+                \ 'AutoCloseBackspaceDeleteMatchFirst': 0,
                 \ }
 
     " Let the user define if he/she wants the plugin to do special actions when the
