@@ -241,13 +241,27 @@ function! s:ClosePair(closer)
     let l:save_ve = &ve
     set ve=all
 
-    if b:AutoCloseOn && s:GetNextChar() == a:closer
-        call s:EraseNCharsAtCursor(1)
-        call s:PopBuffer()
+    let l:spaces = ''
+    if b:AutoCloseOn
+        let l:numChars = 1
+
+        if count( b:AutoCloseSkipSpacesOnCloseFor, a:closer ) > 0
+            while s:GetCharAhead(l:numChars) == " "
+                let l:spaces .= "\<Space>"
+                let l:numChars += 1
+            endwhile
+        endif
+
+        if s:GetCharAhead(l:numChars) == a:closer
+            call s:EraseNCharsAtCursor(l:numChars)
+            for i in range(0,l:numChars)
+                call s:PopBuffer()
+            endfor
+        endif
     endif
 
     exec "set ve=" . l:save_ve
-    return a:closer
+    return l:spaces.a:closer
 endfunction
 
 " in case closer is identical with its opener
@@ -379,6 +393,7 @@ function! s:DefineVariables()
                 \ 'AutoCloseExpandEnterOn': "",
                 \ 'AutoCloseExpandSpace': 1,
                 \ 'AutoClosePreserveEnterMapping': 0,
+                \ 'AutoCloseSkipSpacesOnCloseFor': AutoClose#DefaultPairs(),
                 \ }
 
     " Let the user define if he/she wants the plugin to do special actions when the
