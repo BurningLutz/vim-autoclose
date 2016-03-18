@@ -145,11 +145,7 @@ function! s:CountQuotes(char)
             endwhile
         endfor
 
-        for c in split(l:line, '\zs')
-            if c == a:char
-                let l:result = l:result + 1
-            endif
-        endfor
+        let l:result = count(split(l:line, '\zs'), a:char)
     endif
     return l:result
 endfunction
