@@ -473,10 +473,12 @@ function! s:CreatePairsMaps()
         let quoted_opener = s:quoteAndEscape(opener)
         let quoted_closer = s:quoteAndEscape(closer)
 
-        exec "xnoremap <buffer> <silent> ". b:AutoCloseSelectionWrapPrefix
-                    \ . opener . " <Esc>`>a" . closer .  "<Esc>`<i" . opener . "<Esc>"
-        exec "xnoremap <buffer> <silent> ". b:AutoCloseSelectionWrapPrefix
-                    \ . closer . " <Esc>`>a" . closer .  "<Esc>`<i" . opener . "<Esc>"
+        if !empty('b:AutoCloseSelectionWrapPrefix')
+            exec "xnoremap <buffer> <silent> ". b:AutoCloseSelectionWrapPrefix
+                        \ . opener . " <Esc>`>a" . closer .  "<Esc>`<i" . opener . "<Esc>"
+            exec "xnoremap <buffer> <silent> ". b:AutoCloseSelectionWrapPrefix
+                        \ . closer . " <Esc>`>a" . closer .  "<Esc>`<i" . opener . "<Esc>"
+        endif
         if key == b:AutoClosePairs[key]
             exec "inoremap <buffer> <silent> " . opener
                         \ . " <C-R>=<SID>OpenOrCloseTwinPair(" . quoted_opener . ")<CR>"
