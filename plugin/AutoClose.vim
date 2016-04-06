@@ -473,7 +473,7 @@ function! s:CreatePairsMaps()
         let quoted_opener = s:quoteAndEscape(opener)
         let quoted_closer = s:quoteAndEscape(closer)
 
-        if !empty('b:AutoCloseSelectionWrapPrefix')
+        if b:AutoCloseSelectionWrapPrefix != ''
             exec "xnoremap <buffer> <silent> ". b:AutoCloseSelectionWrapPrefix
                         \ . opener . " <Esc>`>a" . closer .  "<Esc>`<i" . opener . "<Esc>"
             exec "xnoremap <buffer> <silent> ". b:AutoCloseSelectionWrapPrefix
