@@ -496,7 +496,7 @@ function! s:CreateExtraMaps()
     inoremap <buffer> <silent> <BS>         <C-R>=<SID>Backspace()<CR>
     inoremap <buffer> <silent> <Del>        <C-R>=<SID>Delete()<CR>
     if b:AutoCloseExpandSpace
-        if exists(':abbreviate')
+        if v:version > 704
             inoremap <buffer> <silent> <Space>      <C-]><C-R>=<SID>Space()<CR>
         else
             " Should only happen on really old VIM. Confirmed on 7.3, the Mac default
