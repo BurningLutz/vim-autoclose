@@ -108,7 +108,7 @@ function! s:AllowQuote(char, isBS)
         if l:backSlashCount % 2
             let l:result = 0
         else
-	    " For words like "Can't"
+        " For words like "Can't"
             if a:char == "'" && l:prev =~? '\w'
                 let l:result = 0
             endif
@@ -301,8 +301,10 @@ function! s:Backspace()
             let l:next = s:GetCharAhead(2)
             let l:isEmpty = (l:next != "\0") && (get(b:AutoClosePairs, l:prev, "\0") == l:next)
 
-            call s:EraseNCharsAtCursor(1) "Delete the next space too
-            call s:PopBuffer()
+            if l:isEmpty
+                call s:EraseNCharsAtCursor(1) "Delete the next space too
+                call s:PopBuffer()
+            endif
 
             if b:AutoCloseBackspaceDeleteMatchFirst
                 " Keep the first space
